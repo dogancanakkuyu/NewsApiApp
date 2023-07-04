@@ -1,4 +1,4 @@
-package com.example.newsapiapp
+package com.example.newsapiapp.view
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -11,7 +11,8 @@ import android.widget.ImageView
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.example.newsapiapp.data.ArticleContent
+import com.example.newsapiapp.view.DetailFragmentArgs
+import com.example.newsapiapp.R
 import com.example.newsapiapp.databinding.FragmentDetailBinding
 import com.example.newsapiapp.viewmodel.AuthenticationViewModel
 import com.example.newsapiapp.viewmodel.BookmarkViewModel

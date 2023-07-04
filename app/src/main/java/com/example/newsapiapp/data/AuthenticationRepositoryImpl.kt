@@ -1,15 +1,12 @@
 package com.example.newsapiapp.data
 
-import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
-class AuthenticationRepository {
+class AuthenticationRepositoryImpl {
     private var firebaseAuth : FirebaseAuth = Firebase.auth
     private var isUserExists : Boolean = false
-
-
     fun getAuth(): FirebaseAuth {
         return firebaseAuth
     }

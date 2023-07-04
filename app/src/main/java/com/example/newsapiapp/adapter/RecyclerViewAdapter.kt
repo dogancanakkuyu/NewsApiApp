@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.example.newsapiapp.MainFragmentDirections
+import com.example.newsapiapp.view.MainFragmentDirections
 import com.example.newsapiapp.data.ArticleContent
 import com.example.newsapiapp.R
 

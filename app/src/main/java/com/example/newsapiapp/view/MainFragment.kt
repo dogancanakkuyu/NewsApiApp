@@ -1,28 +1,18 @@
-package com.example.newsapiapp
+package com.example.newsapiapp.view
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import com.example.newsapiapp.R
 import com.example.newsapiapp.adapter.CategoriesAdapter
 import com.example.newsapiapp.adapter.RecyclerViewAdapter
-import com.example.newsapiapp.data.BookmarkRepository
 import com.example.newsapiapp.databinding.FragmentMainBinding
-import com.example.newsapiapp.extensions.setDivider
 import com.example.newsapiapp.viewmodel.AuthenticationViewModel
 import com.example.newsapiapp.viewmodel.NewsViewModel
-import com.google.firebase.auth.FirebaseAuth
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 
 class MainFragment : Fragment(), CategoriesAdapter.ClickListener {

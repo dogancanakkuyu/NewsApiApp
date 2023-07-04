@@ -1,15 +1,11 @@
-package com.example.newsapiapp
+package com.example.newsapiapp.view
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.activity.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.newsapiapp.viewmodel.NewsViewModel
-import com.example.newsapiapp.adapter.RecyclerViewAdapter
+import com.example.newsapiapp.R
 import com.example.newsapiapp.databinding.ActivityMainBinding
-import com.example.newsapiapp.extensions.setDivider
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding : ActivityMainBinding

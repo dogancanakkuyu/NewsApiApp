@@ -1,6 +1,7 @@
 package com.example.newsapiapp.data
 
 import com.example.newsapiapp.api.NewsApiService
+import com.example.newsapiapp.data.News
 import java.io.IOException
 
 class NewsRepository {
