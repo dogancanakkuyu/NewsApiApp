@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/loginFragment">
+    <fragment
+        android:id="@+id/main_fragment"
+        android:name="com.example.newsapiapp.MainFragment"
+        android:label="MainFragment" >
+        <action
+            android:id="@+id/action_main_fragment_to_detail_fragment"
+            app:destination="@id/detail_fragment" >
+        </action>
+        <action
+            android:id="@+id/action_main_fragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/detail_fragment"
+        android:name="com.example.newsapiapp.DetailFragment"
+        android:label="fragment_detail"
+        tools:layout="@layout/fragment_detail" >
+        <action
+            android:id="@+id/action_detail_fragment_to_main_fragment"
+            app:destination="@id/main_fragment" />
+        <argument
+            android:name="article_content"
+            app:argType="com.example.newsapiapp.data.ArticleContent" />
+    </fragment>
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.example.newsapiapp.LoginFragment"
+        android:label="fragment_login"
+        tools:layout="@layout/fragment_login" >
+        <action
+            android:id="@+id/action_loginFragment_to_main_fragment"
+            app:destination="@id/main_fragment" />
+    </fragment>
+</navigation>
