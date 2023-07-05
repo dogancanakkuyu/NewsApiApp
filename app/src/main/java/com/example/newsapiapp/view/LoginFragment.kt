@@ -6,26 +6,30 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.example.newsapiapp.LoginState
 import com.example.newsapiapp.R
 import com.example.newsapiapp.databinding.FragmentLoginBinding
 import com.example.newsapiapp.viewmodel.AuthenticationViewModel
+import com.example.newsapiapp.viewmodel.LoginViewModel
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseAuth
-
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
+@AndroidEntryPoint
 class LoginFragment : Fragment() {
     private lateinit var binding: FragmentLoginBinding
-    private val authenticationViewModel : AuthenticationViewModel by viewModels()
+    private val loginViewModel by viewModels<LoginViewModel>()
 
-    private lateinit var auth : FirebaseAuth
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        auth = authenticationViewModel.getUser()
     }
 
     override fun onStart() {
         super.onStart()
-        if (auth.currentUser != null) {
+        if (loginViewModel.getCurrentUser() != null) {
             findNavController().navigate(R.id.action_loginFragment_to_main_fragment)
         }
     }
@@ -49,8 +53,19 @@ class LoginFragment : Fragment() {
         val password : TextInputEditText = binding.password
 
         binding.logInBtn.setOnClickListener {
-            authenticationViewModel.logInUser(email.text.toString(), password.text.toString())
-            if(authenticationViewModel.isUserExists()) findNavController().navigate(R.id.action_loginFragment_to_main_fragment)
+            lifecycleScope.launch {
+                loginViewModel.logIn(email.text.toString(),password.text.toString())
+                loginViewModel.loginViewModel.collect{
+                    when(it) {
+                        is LoginState.Success -> findNavController().navigate(R.id.action_loginFragment_to_main_fragment)
+                        is LoginState.Loading -> println("loading")
+                        is LoginState.Error -> println(it.error)
+                        else -> {
+                            println("heyy")
+                        }
+                    }
+                }
+            }
         }
     }
 }

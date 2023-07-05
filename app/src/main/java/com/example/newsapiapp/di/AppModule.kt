@@ -1,5 +1,8 @@
 package com.example.newsapiapp.di
 
+import com.example.newsapiapp.data.AuthenticationRepositoryImpl
+import com.example.newsapiapp.data.LogInRepositoryImpl
+import com.example.newsapiapp.data.repo.AuthenticationRepository
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -17,4 +20,7 @@ object AppModule {
     fun provideFirebaseAuth() : FirebaseAuth {
         return Firebase.auth
     }
+    @Provides
+    fun provideAuthRepository(impl: LogInRepositoryImpl) : AuthenticationRepository.LogInRepository = impl
+
 }
