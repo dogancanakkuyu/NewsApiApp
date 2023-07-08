@@ -14,7 +14,7 @@ import com.example.newsapiapp.adapter.CategoriesAdapter
 import com.example.newsapiapp.adapter.NewsAdapter
 import com.example.newsapiapp.databinding.FragmentMainBinding
 import com.example.newsapiapp.utils.Constant
-import com.example.newsapiapp.viewmodel.AuthenticationViewModel
+import com.example.newsapiapp.viewmodel.LoginViewModel
 import com.example.newsapiapp.viewmodel.ServiceViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -26,9 +26,8 @@ class MainFragment : Fragment(), CategoriesAdapter.ClickListener {
     private lateinit var newsAdapter: NewsAdapter
     private lateinit var categoriesAdapter: CategoriesAdapter
 
-
+    private val loginViewModel : LoginViewModel by viewModels()
     private val serviceViewModel: ServiceViewModel by viewModels()
-    private val authenticationViewModel: AuthenticationViewModel by viewModels()
     private var selectedItem: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,13 +48,12 @@ class MainFragment : Fragment(), CategoriesAdapter.ClickListener {
         binding.recyclerViewCategories.adapter = categoriesAdapter
 
         sendNewRequest(0)
-        println(authenticationViewModel.getUser().uid)
         logOut()
     }
 
     fun logOut() {
         binding.logOutBtn.setOnClickListener {
-            authenticationViewModel.logOutFromAccount()
+            loginViewModel.logOut()
             findNavController().navigate(R.id.action_main_fragment_to_loginFragment)
         }
     }

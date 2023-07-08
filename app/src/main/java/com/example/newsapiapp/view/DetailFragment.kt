@@ -14,14 +14,12 @@ import androidx.navigation.fragment.navArgs
 import com.example.newsapiapp.view.DetailFragmentArgs
 import com.example.newsapiapp.R
 import com.example.newsapiapp.databinding.FragmentDetailBinding
-import com.example.newsapiapp.viewmodel.AuthenticationViewModel
 import com.example.newsapiapp.viewmodel.BookmarkViewModel
 
 class DetailFragment : Fragment() {
     private lateinit var binding: FragmentDetailBinding
     private val args by navArgs<DetailFragmentArgs>()
 
-    private val authenticationViewModel : AuthenticationViewModel by viewModels()
     private val bookmarkViewModel : BookmarkViewModel by viewModels()
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -42,19 +40,11 @@ class DetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         onBackButtonPressed(view.findViewById(R.id.back_button))
-        addArticleToBookmarks()
     }
 
     private fun onBackButtonPressed(backbutton : ImageView){
         backbutton.setOnClickListener {
             findNavController().navigate(R.id.action_detail_fragment_to_main_fragment)
-        }
-    }
-
-    private fun addArticleToBookmarks() {
-        binding.bookmarkBtn.setOnClickListener {
-            authenticationViewModel.getCurrentUserId()
-                ?.let { bookmarkViewModel.addBookmark(args.articleContent, it) }
         }
     }
 

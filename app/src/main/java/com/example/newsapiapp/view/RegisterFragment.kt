@@ -1,6 +1,5 @@
 package com.example.newsapiapp.view
 
-import android.opengl.Visibility
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -12,11 +11,9 @@ import androidx.navigation.fragment.findNavController
 import com.example.newsapiapp.R
 import com.example.newsapiapp.RegisterState
 import com.example.newsapiapp.databinding.FragmentRegisterBinding
-import com.example.newsapiapp.viewmodel.AuthenticationViewModel
 import com.example.newsapiapp.viewmodel.RegisterViewModel
 import com.google.android.material.textfield.TextInputEditText
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
