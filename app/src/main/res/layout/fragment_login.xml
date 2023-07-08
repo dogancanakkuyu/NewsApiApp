@@ -53,6 +53,26 @@
         app:layout_constraintTop_toBottomOf="@id/passwordLayout"
         app:layout_constraintEnd_toEndOf="@id/passwordLayout"
         android:layout_marginTop="10dp"/>
+    <TextView
+        android:id="@+id/donthaveaccount"
+        android:text="Don't have an account?"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/forgotPassword"
+        app:layout_constraintBottom_toTopOf="@id/logInBtn"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="10dp"/>
+    <TextView
+        android:id="@+id/signUp"
+        android:text="@string/sign_up_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/categories_selected_item_background"
+        app:layout_constraintStart_toEndOf="@id/donthaveaccount"
+        app:layout_constraintTop_toBottomOf="@id/forgotPassword"
+        app:layout_constraintBottom_toTopOf="@id/logInBtn"
+        android:layout_marginStart="5dp"/>
     <com.google.android.material.button.MaterialButton
         android:id="@+id/logInBtn"
         android:text="Log In"
@@ -60,7 +80,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/forgotPassword"
+        app:layout_constraintTop_toBottomOf="@id/donthaveaccount"
         android:layout_marginHorizontal="50dp"
         android:layout_marginTop="10dp"
         app:backgroundTint="@color/black"/>

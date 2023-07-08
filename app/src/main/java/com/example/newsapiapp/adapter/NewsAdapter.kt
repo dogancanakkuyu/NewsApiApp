@@ -15,7 +15,7 @@ import com.example.newsapiapp.view.MainFragmentDirections
 import com.example.newsapiapp.data.ArticleContent
 import com.example.newsapiapp.R
 
-class RecyclerViewAdapter(private val articles: List<ArticleContent>) : RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>() {
+class NewsAdapter(private val articles: List<ArticleContent>) : RecyclerView.Adapter<NewsAdapter.ViewHolder>() {
 
 
 

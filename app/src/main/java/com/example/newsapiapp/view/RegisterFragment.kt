@@ -1,19 +1,28 @@
 package com.example.newsapiapp.view
 
+import android.opengl.Visibility
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
+import com.example.newsapiapp.R
+import com.example.newsapiapp.RegisterState
 import com.example.newsapiapp.databinding.FragmentRegisterBinding
 import com.example.newsapiapp.viewmodel.AuthenticationViewModel
+import com.example.newsapiapp.viewmodel.RegisterViewModel
 import com.google.android.material.textfield.TextInputEditText
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
-
+@AndroidEntryPoint
 class RegisterFragment : Fragment() {
     private lateinit var binding: FragmentRegisterBinding
-    private val authenticationViewModel : AuthenticationViewModel by viewModels()
+    private val registerViewModel : RegisterViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -28,14 +37,30 @@ class RegisterFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        manageLoginScreen()
+        manageRegisterScreen()
     }
 
-    private fun manageLoginScreen() {
+    private fun manageRegisterScreen() {
         val email : TextInputEditText = binding.emailTextInput
         val password : TextInputEditText = binding.passwordTextInput
         binding.createAccountBtn.setOnClickListener{
-            authenticationViewModel.registerUser(email.text.toString(),password.text.toString())
+            lifecycleScope.launch {
+                registerViewModel.registerWithEmailAndPassword(email.text.toString(),password.text.toString())
+                registerViewModel.registerFlow.collect{
+                    when(it) {
+                        is RegisterState.Success -> println(it.msg)
+                        is RegisterState.Error -> {
+                            binding.errorMsg.text = it.error
+                            binding.errorMsg.visibility = View.VISIBLE
+                        }
+                        else -> RegisterState.Empty
+                    }
+                }
+            }
+        }
+
+        binding.logIn.setOnClickListener {
+            findNavController().navigate(R.id.action_registerFragment_to_loginFragment)
         }
     }
 }

@@ -6,28 +6,35 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.newsapiapp.R
+import com.example.newsapiapp.ServiceResponseState
 import com.example.newsapiapp.adapter.CategoriesAdapter
-import com.example.newsapiapp.adapter.RecyclerViewAdapter
+import com.example.newsapiapp.adapter.NewsAdapter
 import com.example.newsapiapp.databinding.FragmentMainBinding
+import com.example.newsapiapp.utils.Constant
 import com.example.newsapiapp.viewmodel.AuthenticationViewModel
-import com.example.newsapiapp.viewmodel.NewsViewModel
+import com.example.newsapiapp.viewmodel.ServiceViewModel
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
-
+@AndroidEntryPoint
 class MainFragment : Fragment(), CategoriesAdapter.ClickListener {
 
-    private lateinit var binding : FragmentMainBinding
-    private lateinit var listAdapter: RecyclerViewAdapter
+    private lateinit var binding: FragmentMainBinding
+    private lateinit var newsAdapter: NewsAdapter
     private lateinit var categoriesAdapter: CategoriesAdapter
-    private val newsViewModel: NewsViewModel by viewModels()
-    private val authenticationViewModel : AuthenticationViewModel by viewModels()
-    private var selectedItem : Int = 0
 
-    private val categories : List<String> = listOf("general","business","entertainment","health","science","sports","technology")
+
+    private val serviceViewModel: ServiceViewModel by viewModels()
+    private val authenticationViewModel: AuthenticationViewModel by viewModels()
+    private var selectedItem: Int = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -38,13 +45,14 @@ class MainFragment : Fragment(), CategoriesAdapter.ClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        categoriesAdapter = CategoriesAdapter(categories,this)
+        categoriesAdapter = CategoriesAdapter(Constant.categories, this)
         binding.recyclerViewCategories.adapter = categoriesAdapter
 
         sendNewRequest(0)
         println(authenticationViewModel.getUser().uid)
         logOut()
-     }
+    }
+
     fun logOut() {
         binding.logOutBtn.setOnClickListener {
             authenticationViewModel.logOutFromAccount()
@@ -52,23 +60,33 @@ class MainFragment : Fragment(), CategoriesAdapter.ClickListener {
         }
     }
 
-    fun sendNewRequest(item : Int){
-        newsViewModel.articles.observe(viewLifecycleOwner) {
 
-            if (it != null) {
-                println(it)
-                listAdapter = it.articles?.let { it1 -> RecyclerViewAdapter(it1) }!!
-                binding.recyclerView.adapter = listAdapter
+    private fun sendNewRequest(item: Int) {
+        lifecycleScope.launch {
+            serviceViewModel.getArticles(Constant.categories[item])
+            serviceViewModel.serviceFlow.collect {
+                when (it) {
+                    is ServiceResponseState.Loading -> println("news loading...")
+                    is ServiceResponseState.Error -> println(it.error)
+                    is ServiceResponseState.Success -> {
+                        newsAdapter = it.body.articles?.let {
+                            NewsAdapter(it)
+                        }!!
+                        binding.recyclerView.adapter = newsAdapter
+                    }
+
+                    else -> ServiceResponseState.Empty
+                }
+
             }
         }
-        newsViewModel.getArticlesFromApi(categories[item])
     }
 
     override fun onClickListener(item: Int) {
         sendNewRequest(item)
     }
 
-    override fun getSelectedItem() : Int {
+    override fun getSelectedItem(): Int {
         return selectedItem
     }
 

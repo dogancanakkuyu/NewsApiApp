@@ -8,8 +8,6 @@ import com.google.firebase.auth.FirebaseUser
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -20,12 +18,12 @@ class LoginViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _loginViewModel = MutableStateFlow<LoginState>(LoginState.Empty)
-    val loginViewModel : StateFlow<LoginState> = _loginViewModel
+    val loginViewModel: StateFlow<LoginState> = _loginViewModel
 
-    fun logIn(email : String, password : String) {
+    fun logIn(email: String, password: String) {
         viewModelScope.launch {
             val flow = repository.logIn(email, password)
-            flow.collect{
+            flow.collect {
                 _loginViewModel.value = it
             }
         }
@@ -36,7 +34,7 @@ class LoginViewModel @Inject constructor(
         _loginViewModel.value = LoginState.Empty
     }
 
-    fun getCurrentUser() : FirebaseUser? {
+    fun getCurrentUser(): FirebaseUser? {
         return repository.getCurrentUser()
     }
 }

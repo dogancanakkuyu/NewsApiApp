@@ -1,7 +1,6 @@
 package com.example.newsapiapp.data.repo
 
 import com.example.newsapiapp.LoginState
-import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.coroutines.flow.Flow
@@ -16,7 +15,6 @@ interface AuthenticationRepository {
     interface LogInRepository {
         fun logOutFromAccount()
         suspend fun logIn(email: String, password: String) : Flow<LoginState>
-
         fun getCurrentUser() : FirebaseUser?
     }
 
