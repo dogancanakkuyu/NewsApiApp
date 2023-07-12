@@ -3,7 +3,7 @@ package com.example.newsapiapp.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.newsapiapp.LoginState
-import com.example.newsapiapp.data.repo.AuthenticationRepository
+import com.example.newsapiapp.data.repo.LoginRepository
 import com.google.firebase.auth.FirebaseUser
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,7 +14,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val repository: AuthenticationRepository.LogInRepository
+    private val loginRepository: LoginRepository
 ) : ViewModel() {
 
     private val _loginViewModel = MutableStateFlow<LoginState>(LoginState.Empty)
@@ -22,19 +22,19 @@ class LoginViewModel @Inject constructor(
 
     fun logIn(email: String, password: String) {
         viewModelScope.launch {
-            val flow = repository.logIn(email, password)
-            flow.collect {
+            loginRepository.logIn(email, password)
+            loginRepository.loginFlow?.collect{
                 _loginViewModel.value = it
             }
         }
     }
 
     fun logOut() {
-        repository.logOutFromAccount()
+        loginRepository.logOutFromAccount()
         _loginViewModel.value = LoginState.Empty
     }
 
     fun getCurrentUser(): FirebaseUser? {
-        return repository.getCurrentUser()
+        return loginRepository.getCurrentUser()
     }
 }

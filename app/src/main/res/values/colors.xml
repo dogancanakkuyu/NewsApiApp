@@ -3,7 +3,6 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="categories_background">#f6f5f8</color>
-    <color name="categories_text_color">#cccccc</color>
     <color name="categories_selected_item_background">#0a84e4</color>
     <color name="error_message_color">#be4d25</color>
 </resources>

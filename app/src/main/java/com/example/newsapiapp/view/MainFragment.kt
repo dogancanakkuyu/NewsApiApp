@@ -13,6 +13,7 @@ import com.example.newsapiapp.ServiceResponseState
 import com.example.newsapiapp.adapter.CategoriesAdapter
 import com.example.newsapiapp.adapter.NewsAdapter
 import com.example.newsapiapp.databinding.FragmentMainBinding
+import com.example.newsapiapp.extensions.Extensions.findNavControllerSafely
 import com.example.newsapiapp.utils.Constant
 import com.example.newsapiapp.viewmodel.LoginViewModel
 import com.example.newsapiapp.viewmodel.ServiceViewModel
@@ -49,12 +50,19 @@ class MainFragment : Fragment(), CategoriesAdapter.ClickListener {
 
         sendNewRequest(0)
         logOut()
+        handleBookMarkBtn()
     }
 
-    fun logOut() {
+    private fun logOut() {
         binding.logOutBtn.setOnClickListener {
             loginViewModel.logOut()
             findNavController().navigate(R.id.action_main_fragment_to_loginFragment)
+        }
+    }
+
+    private fun handleBookMarkBtn() {
+        binding.bookmarkBtn.setOnClickListener {
+            findNavController().navigate(R.id.action_main_fragment_to_bookmarkFragment)
         }
     }
 
@@ -62,15 +70,20 @@ class MainFragment : Fragment(), CategoriesAdapter.ClickListener {
     private fun sendNewRequest(item: Int) {
         lifecycleScope.launch {
             serviceViewModel.getArticles(Constant.categories[item])
-            serviceViewModel.serviceFlow.collect {
+            serviceViewModel.serviceFlow.collect { it ->
                 when (it) {
-                    is ServiceResponseState.Loading -> println("news loading...")
+                    is ServiceResponseState.Loading -> {
+                        binding.recyclerView.visibility = View.GONE
+                        binding.progressBar.visibility = View.VISIBLE
+                    }
                     is ServiceResponseState.Error -> println(it.error)
                     is ServiceResponseState.Success -> {
                         newsAdapter = it.body.articles?.let {
                             NewsAdapter(it)
                         }!!
                         binding.recyclerView.adapter = newsAdapter
+                        binding.progressBar.visibility = View.GONE
+                        binding.recyclerView.visibility = View.VISIBLE
                     }
 
                     else -> ServiceResponseState.Empty

@@ -11,6 +11,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.newsapiapp.LoginState
 import com.example.newsapiapp.R
 import com.example.newsapiapp.databinding.FragmentLoginBinding
+import com.example.newsapiapp.extensions.Extensions.findNavControllerSafely
 import com.example.newsapiapp.viewmodel.LoginViewModel
 import com.google.android.material.textfield.TextInputEditText
 import dagger.hilt.android.AndroidEntryPoint
@@ -35,8 +36,7 @@ class LoginFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
+    ): View {
         binding = FragmentLoginBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -60,11 +60,13 @@ class LoginFragment : Fragment() {
                 loginViewModel.logIn(email.text.toString(), password.text.toString())
                 loginViewModel.loginViewModel.collect {
                     when (it) {
-                        is LoginState.Success -> findNavController().navigate(R.id.action_loginFragment_to_main_fragment)
+                        is LoginState.Success -> findNavControllerSafely(R.id.loginFragment)?.navigate(R.id.action_loginFragment_to_main_fragment)
                         is LoginState.Loading -> println("loading")
-                        is LoginState.Error -> println(it.error)
+                        is LoginState.Error -> {
+                            binding.errorMsg.text = it.error
+                            binding.errorMsg.visibility = View.VISIBLE
+                        }
                         else -> {
-                            println("heyy")
                         }
                     }
                 }
