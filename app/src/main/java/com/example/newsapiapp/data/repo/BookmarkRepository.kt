@@ -11,5 +11,5 @@ interface BookmarkRepository {
     var bookmarkFlow : Flow<List<ArticleContent>>?
     fun addBookmark(articleContent: ArticleContent)
     suspend fun deleteBookmark(articleContent: ArticleContent)
-    suspend fun getAllBookmarks() : Flow<List<ArticleContent>>
+    suspend fun getAllBookmarks() : Flow<ResponseState>
 }

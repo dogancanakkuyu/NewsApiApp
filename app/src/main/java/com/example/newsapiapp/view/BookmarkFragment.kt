@@ -1,35 +1,28 @@
 package com.example.newsapiapp.view
 
-import android.content.res.Resources
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Paint.Style
 import android.graphics.Rect
-import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.util.TypedValue
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.core.graphics.drawable.toDrawable
-import androidx.core.graphics.times
-import androidx.core.view.get
-import androidx.core.view.marginEnd
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.newsapiapp.R
+import com.example.newsapiapp.ResponseState
 import com.example.newsapiapp.adapter.BookmarkAdapter
+import com.example.newsapiapp.data.ArticleContent
 import com.example.newsapiapp.databinding.FragmentBookmarkBinding
 import com.example.newsapiapp.extensions.Extensions.findNavControllerSafely
 import com.example.newsapiapp.utils.Utils
 import com.example.newsapiapp.viewmodel.BookmarkViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -59,7 +52,21 @@ class BookmarkFragment : Fragment() {
         lifecycleScope.launch {
             bookmarkViewModel.getAllBookmarks()
             bookmarkViewModel.bookmarkFlow.collect {
-                binding.bookmarkRecyclerView.adapter = BookmarkAdapter(it)
+                when(it) {
+                    is ResponseState.Loading -> {
+                        binding.bookmarkRecyclerView.visibility = View.GONE
+                        binding.progressBar.visibility = View.VISIBLE
+                    }
+                    is ResponseState.Success -> {
+                        binding.progressBar.visibility = View.GONE
+                        binding.bookmarkRecyclerView.adapter = BookmarkAdapter(it.articles)
+                        binding.bookmarkRecyclerView.visibility = View.VISIBLE
+                    }
+                    is ResponseState.Error -> {
+                        println("error")
+                    }
+                    is ResponseState.Empty -> {}
+                }
             }
         }
     }
@@ -85,7 +92,6 @@ class BookmarkFragment : Fragment() {
                 isCurrentlyActive: Boolean
             ) {
                 val itemView = viewHolder.itemView
-                println("layoutPos ${viewHolder.layoutPosition}")
                 val bg = ContextCompat.getColor(requireContext(), R.color.error_message_color)
                 val iconDelete =
                     ContextCompat.getDrawable(requireContext(), R.drawable.delete_icon)!!
@@ -127,7 +133,12 @@ class BookmarkFragment : Fragment() {
                         }
                     }
                     else{
-                        val article = bookmarkViewModel.bookmarkFlow.value[viewHolder.layoutPosition]
+                        val article = bookmarkViewModel.bookmarkFlow.value.let {
+                            when(it){
+                                is ResponseState.Success -> it.articles[viewHolder.layoutPosition]
+                                else -> {ArticleContent()}
+                            }
+                        }
                         bookmarkViewModel.deleteBookmark(article)
                     }
 
@@ -146,7 +157,7 @@ class BookmarkFragment : Fragment() {
         itemTouchHelper.attachToRecyclerView(binding.bookmarkRecyclerView)
     }
 
-    fun backButtonPressed() {
+    private fun backButtonPressed() {
         binding.backButton.setOnClickListener {
             findNavControllerSafely(R.id.bookmarkFragment)?.navigate(R.id.action_bookmarkFragment_to_main_fragment)
         }

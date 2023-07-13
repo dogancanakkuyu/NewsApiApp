@@ -19,8 +19,8 @@ class BookmarkViewModel @Inject constructor(private val bookmarkRepository: Book
     private val _responseFlow = MutableStateFlow<ResponseState>(ResponseState.Empty)
     val responseFlow : StateFlow<ResponseState> = _responseFlow
 
-    private val _bookmarkFlow = MutableStateFlow<List<ArticleContent>>(emptyList())
-    val bookmarkFlow : StateFlow<List<ArticleContent>> = _bookmarkFlow
+    private val _bookmarkFlow = MutableStateFlow<ResponseState>(ResponseState.Empty)
+    val bookmarkFlow : StateFlow<ResponseState> = _bookmarkFlow
     fun addBookmark(articleContent: ArticleContent) {
         viewModelScope.launch {
             bookmarkRepository.addBookmark(articleContent)
